@@ -8,6 +8,7 @@ st.title("Model Compare")
 
 model_path = "."
 models = os.listdir(model_path)
+models = [i for i in models if os.path.isdir(i)]
 
 col1, col2 = st.columns(2)
 with col1:
