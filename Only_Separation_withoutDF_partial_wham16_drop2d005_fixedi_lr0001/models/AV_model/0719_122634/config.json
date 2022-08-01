@@ -1,0 +1,116 @@
+{
+    "name": "AV_model",
+    "wandb_n": "",
+    "n_gpu": 1,
+    "arch": {
+        "type": "SeparationModel",
+        "args": {
+            "n_fftBins": 512,
+            "BN_dim": 256,
+            "H_dim": 512,
+            "layer": 8,
+            "stack": 3,
+            "kernel": 3,
+            "num_spk": 2,
+            "skip": false,
+            "dilated": true,
+            "casual": false,
+            "pretrained_csd": false,
+            "path_pretrained_csd": "/home/dsi/moradim/Results/train_only_csd_weighted_LN_schedule_clip1_PReLU_try2/Weights/model_best_2022_03_22-11:13:38_AM.pth",
+            "freeze_csd_weights": false,
+            "finetune": false,
+            "bool_drop": true,
+            "drop_value": 0.05,
+            "wen": false
+        }
+    },
+    "data_loader": {
+        "type": "Old_Partial_DataLoader",
+        "args": {
+            "csv_file": "/dsi/gannot-lab/datasets/mordehay/data_wham_libri_all_overlap_shlomi_reverb_sir0/train/csv_files/with_wham_noise_res.csv",
+            "cds_lables": "/dsi/gannot-lab/datasets/mordehay/data_wham_partial_overlap/train/labels_npz/",
+            "batch_size": 16,
+            "shuffle": true,
+            "validation_split": 0.2,
+            "num_workers": 8
+        }
+    },
+    "optimizer": {
+        "type": "Adam",
+        "args": {
+            "lr": 0.001,
+            "weight_decay": 0,
+            "amsgrad": true
+        }
+    },
+    "loss_separation": {
+        "type": "PITLossWrapper",
+        "loss_func": "pairwise_neg_sisdr",
+        "perm_reduce": false,
+        "args": {
+            "pit_from": "pw_mtx"
+        }
+    },
+    "loss_vad": {
+        "type": "PITLossWrapper",
+        "loss_func": "BinaryCrossEntropyLoss_Mean",
+        "args": {
+            "pit_from": "pw_pt"
+        }
+    },
+    "combined_loss": {
+        "weight_separation_loss": 1,
+        "weight_vad_loss": 0,
+        "weight_csd_loss": 0,
+        "weight_sum_csd_loss": 0,
+        "weight_mse_loss": 0
+    },
+    "metrics": {
+        "separation": [
+            "pit_snr",
+            "pit_si_sdr"
+        ],
+        "separation_mix": [
+            "si_sdri"
+        ],
+        "vad": [
+            "pit_CE_vad"
+        ],
+        "vad_acc": [
+            "vad_accuracy"
+        ],
+        "csd_acc": [
+            "csd_accuracy"
+        ]
+    },
+    "lr_scheduler": {
+        "type": "ReduceLROnPlateau",
+        "args": {
+            "factor": 0.5,
+            "patience": 3,
+            "verbose": false
+        }
+    },
+    "trainer": {
+        "epochs": 1000,
+        "accum_iter": 1,
+        "vad_decay_weight": 1,
+        "swa_start": 2000,
+        "vad_bool": false,
+        "csd_bool": false,
+        "save_dir": "/dsi/gannot-lab/datasets/mordehay/Result/Separation_GN_withoutDF_partial_wham_16_drop2d005_lr0001_Shlomi_delayed",
+        "save_period": 1,
+        "verbosity": 2,
+        "max_clip": 5,
+        "monitor": "max val_pit_si_sdr",
+        "early_stop": 1000,
+        "tensorboard": true
+    },
+    "tester": {
+        "save_test": "/dsi/gannot-lab/datasets/mordehay/Result/Test/Only_Separation_withoutDF_partial_wham16_drop2d005_fixedi_lr0001/",
+        "csv_file_test": "/dsi/gannot-lab/datasets/mordehay/data_wham_partial_overlap/test/csv_files/with_wham_noise_res.csv",
+        "cds_lables": "/dsi/gannot-lab/datasets/mordehay/data_wham_partial_overlap/test/labels_npz/",
+        "save_test_real": "/dsi/gannot-lab/datasets/mordehay/Result/Only_Separation_withoutDF_partial_wham128_test_real/",
+        "save_dir": "save_test_RandT60/"
+    }
+}
