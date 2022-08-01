@@ -6,7 +6,7 @@ import glob
 st.title("Model Compare")
 # st.set_page_config(layout="wide")
 
-model_path = "."
+model_path = "/dsi/gannot-lab/datasets/mordehay/Result/Test"
 models = os.listdir(model_path)
 
 col1, col2 = st.columns(2)
