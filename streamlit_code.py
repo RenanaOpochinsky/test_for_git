@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 import glob
+import pandas as pd
 #from typing_extensions import TypeGuard
 
 st.title("Model Compare")
@@ -22,8 +23,10 @@ with col1:
 
         if not os.path.exists(files_dir):
             continue
+        df = pd.read_csv(f'{model_path}/{selected_model}/results_information.csv')
 
-       # separate scenario name
+        # separate scenario name
+        scenario_num = scenario.split('_')[1]
         sisdri = scenario.split('_')[3]
         rt60 = scenario.split('_')[5]
         snr = scenario.split('_')[7]
@@ -48,6 +51,7 @@ with col1:
     scene = sorted_scenarios[selected_scenario]
 
 
+    st.write(df['vad_accuracy'][scenario_num])
     st.text('sisdri =')
     st.write(scene[0])
     st.text('rt60 =')
