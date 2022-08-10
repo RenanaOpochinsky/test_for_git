@@ -7,10 +7,9 @@ import pandas as pd
 st.title("Model Compare")
 # st.set_page_config(layout="wide")
 
-#model_path = "/dsi/gannot-lab/datasets/mordehay/Result/test_for_git"
 model_path = "."
 models = os.listdir(model_path)
-# models = [i for i in models if os.path.isdir(i)]
+models = [i for i in models if os.path.isdir(i)]
 
 col1, col2 = st.columns(2)
 with col1:
@@ -51,8 +50,8 @@ with col1:
 
     scene = sorted_scenarios[selected_scenario]
 
-    st.text('from pdf-')
-    st.text(df['si_sdr'].tolist()[int(scenario_num)])
+
+    st.write(df['vad_accuracy'][scenario_num])
     st.text('sisdri =')
     st.write(scene[0])
     st.text('rt60 =')
