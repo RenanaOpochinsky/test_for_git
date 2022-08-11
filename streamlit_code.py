@@ -51,8 +51,8 @@ with col1:
 
     scene = sorted_scenarios[selected_scenario]
 
-    st.text('from pdf-')
-    st.text(df['si_sdr'].tolist()[int(scenario_num)])
+    #st.text('from pdf-')
+    #st.text(df['si_sdr'].tolist()[int(scenario_num+4)])
     st.text('sisdri =')
     st.write(scene[0])
     st.text('rt60 =')
